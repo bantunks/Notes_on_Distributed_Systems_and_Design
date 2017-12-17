@@ -1,0 +1,6 @@
+Stateful, Stateless designs and Caching  --
+
+1. Stateless designs scale much better than Stateful designs. Take REST based designs.
+2. Caching data would lead to stateful designs.
+3. Stateless designs can find it difficult to handle caching
+4. To design a stateless server with support for caching, start with a stateless server, and add caching in front of the server as the first layer. For e.g. a REST based stateless server with a Memcached layer in front to handle caching.
