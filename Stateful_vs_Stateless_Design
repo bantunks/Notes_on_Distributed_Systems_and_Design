@@ -1,8 +1,22 @@
 Stateful, Stateless designs and Caching  --
 
 1. Stateless designs scale much better than Stateful designs. Take REST based designs.
-2. Caching data would lead to stateful designs.
-3. Stateless designs can find it difficult to handle caching
+2. Caching data would lead to stateful designs. 
+    This is debatable around the point about where do we intend to add caching. 
+    Do we intend to add caching right into the service logic at the server nodes or as a separate layer altogether ?
+    Ideally, serving large amounts of data through caches should be implemented as a separate physical layer, example memcached
+3. Stateless designs can find it difficult to handle state.
 4. To design a stateless server with support for caching, start with a stateless server, and add caching in front of the server as the first layer. For e.g. a REST based stateless server with a Memcached layer in front to handle caching.
 5. In a stateless design, since the worker nodes do not maintain any state, they can handle any request forwarded/directed by the load balancer layer.
 6. A truly distributed system is one which can handle failures/errors in the individual components of the system, ensuring the system is responsive enough to satisfy the least strict established SLAs
+7. Amongst HTTP requests, GET and POST requests can be cached but PUT cannot be cached.
+
+
+Storage SLA --
+Prefer RAM storage for SLA of less than 1ms latency
+Prefer SSD storage for SLA of less than 100ms latency
+Prefer HDD storage for SLA of less than 100ms latency
+
+
+In-Memory DBMS --
+Why do IMDB find it difficult to scale across multiple cores ? Why do their performance suffer when they are run on high number of cores, let us say 32 ?
