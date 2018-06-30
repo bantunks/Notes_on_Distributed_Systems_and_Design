@@ -1,0 +1,34 @@
+https://www.infoq.com/news/2016/02/services-distributed-monolith
+Microservices Ending up as a Distributed Monolith
+Content below copied from this link --
+
+Christensen describes shared libraries are those that are required to run services, in other words those which are collectively referred to
+as "the platform". Examples of libraries are Spring, Guava and those commonly used for routing and logging, for example. 
+In the end a system can depend on 100s of libraries that all are needed to run the system. If a service cannot interact within a system 
+unless all these libraries are available, then Christensen calls this a distributed monolith. Essentially all you have done is spread a 
+monolith over the network paying all the cost of a distributed system but losing a lot of the benefits of the microservices architecture. 
+Some of the benefits lost include the characteristic of polyglot, meaning that you loose the possibility of services adopting the best 
+technologies to solve the specific problem, and organizational and technical decoupling, allowing for a team to evolve technically without 
+first having to convince a central authority.
+
+The Don’t Repeat Yourself (DRY) acronym is well-known to most, if not all, developers. With business logic in shared code the ability to 
+deploy changes in isolation is reduced since it affects all services using that code. Christensen emphasizes that shared code is perfectly 
+fine within a service boundary but when it leaks outside that’s a potential form of coupling. He refers to Sam Newman and his book Building Microservices where Newman states:
+
+"The evils of too much coupling between services are far worse than the problems caused by code duplication"
+
+The alternative for Christensen is contracts and protocols, services should hide all their implementation details only exposing data 
+contracts and network protocols. Without any dependency on service implementation a consumer can use any technology and language, 
+and evolve at its own pace noticing that this is how Internet works. He notes though that there are legitimate needs for standardization 
+in areas like logging, distributed tracing, routing, etc., but this should be enabled using independent libraries that a consumer can 
+choose whether to use or not.
+
+Christensen believes the reason for these mistakes occuring so often is ease; we know how to use shared libraries and we too often 
+optimize for the short-term since it feels more productive. He notes though that delaying the cost of decoupling is very high and that we 
+already know the solution, it takes a bit of extra thought and effort to put the tools in place from the beginning but when they are in 
+place they are straightforward to use. He therefore recommends looking beyond the short-term ease, avoiding binary coupling and instead 
+leveraging contracts and protocols to get the benefits of the microservices architecture.
+
+During the Q&A after his talk he emphasized that he thinks it’s OK to use even a large framework as long as it’s used inside a 
+self-contained service, but not if the architecture of the whole system adopts this large framework because that leads to long-term 
+coupling.
