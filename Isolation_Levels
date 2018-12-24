@@ -1,3 +1,5 @@
+Points directly copied from Craig Freedman's SQL Server Blog --
+
 Excerpts from https://blogs.msdn.microsoft.com/craigfr/2007/04/25/read-committed-isolation-level/
 Read Committed Isolation Level
 When SQL Server executes a statement at the read committed isolation level, it acquires short lived share locks on a row by row basis.  The duration of these share locks is just long enough to read and process each row; the server generally releases each lock before proceeding to the next row.  Thus, if you run a simple select statement under read committed and check for locks (e.g., with sys.dm_tran_locks), you will typically see at most a single row lock at a time.  The sole purpose of these locks is to ensure that the statement only reads and returns committed data.  The locks work because updates always acquire an exclusive lock which blocks any readers trying to acquire a share lock.
