@@ -1,0 +1,53 @@
+Notes from the session on Contol Planes vs Data Planes from AWS:ReInvent 2018 --
+https://www.youtube.com/watch?v=O8xLxNje30M
+1. The trade-offs consider the following in descending order of importance --
+    1.1 Security (Most Important and no compromises here)
+    1.2 Durability
+    1.3 Availability
+    1.4 Speed
+
+2. Control Theory at the highest level has three components --
+  2.1 Measurement
+  2.2 Controller
+  2.3 Actuator
+  
+3. The controller is in charge constantly using the measurements and using the data from these measurements to kick-off actuators. 
+   A synonymous example from Software engineering could be the case of Load Balancers where an LB Controller uses the real-time metrics to
+   control the data plane and directing/re-directing client requests to the target servers or launching/stopping servers if required due to
+   higher load or lesser load respectively. This results in a so-called Closed-Loop system design where the controller is working in a cycle 
+   of gathering metrics and taking actions on those metrics.
+   
+4. VERY IMPORTANT -- PID (Proportional-Integral_Derivative) controller concept, any system lacking in either of Porportionality, Integral or 
+   Derivative components are bound to be not stable.
+    
+5. Patterns --
+    5.1 Checksum Everything to detect corruption
+    5.2 Cryptographic Authentication
+    5.3 Cells, Shells and Poison Testers -- Limit the Blast Radius -- Limit the scope of damage, expect things to fail
+    5.4 Asyncronous Coupling
+    5.5 Closed Feedback Loops
+    5.6 Small Pushes and Large Pulls -- 
+      5.6.1 Avoid thundering herd, avoid connecting large fleets to small fleets(pulling from large fleet to small fleet)
+    5.7 Avoid Cold Start and Cold Caches --
+      5.7.1  A Thundering Herd hitting a cold cache will never let the cache get warm
+      5.7.2  Retry strorms can be moderated by throttling
+      5.7.3  Avoid caches if at all possible, but if cache needed for cost reasons, etc. let it warm up before start accepting requests
+      5.7.4  If the underlying layer served by the cache goes down -- Usually better to server stale entries from the cache than return 
+             500. The TTL will expire and the cache will have stale content until the underlying layer comes back and in this case, keep
+             serving stale content rather than just return 500
+    5.8 Throttling -- Important to be able to recover, make sure customer experience is not impacted
+    5.9 Deltas -- Push only the changes and not the whole data, track deltas by using versioning.
+                  Reduce the amount of deltas and the effect on the system from a huge amount of deltas
+    5.10 Modality and Constant-Work -- Reduce the number of different modes and states of operation
+      5.10.1 Systems that chnage performance in response to data or workload patterns are fragile.
+      5.10.2 Relational DBMS are bad for building stable control planes
+      
+  IMPORTANT -- Modality and Constant-Work Pattern is actually an anti-pattern to Deltas. Deltas pattern suggests to push only deltas but 
+  Modality and Constant-Work pattern advocates pushing the whole data to the data place, instead of deltas.
+  
+  Each AWS service being used by a customer is a control plane allowing customers to use APIs for that service to request the control plane
+  some service.
+  IMPORTANT Take Aways -- Closed Loop Controller (polling for state, feedback loop), Asynchronous Coupling 
+    
+ Follow Ups -- How does a DNS health-check system work ?
+               PID
