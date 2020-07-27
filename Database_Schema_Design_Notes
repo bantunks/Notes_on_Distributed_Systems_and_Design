@@ -1,2 +1,24 @@
+Links referenced --
 Data Modeling Guidelines for NoSQL JSON Document Databases -- https://mapr.com/blog/data-modeling-guidelines-nosql-json-document-databases/
 NOSQL DATA MODELING TECHNIQUES -- https://highlyscalable.wordpress.com/2012/03/01/nosql-data-modeling-techniques/
+
+Notes from https://mapr.com/blog/data-modeling-guidelines-nosql-json-document-databases/ -- some points could be MapR specific
+Relational vs. NoSQL Data Modeling
+In relational design, the focus and effort is around describing the entity and its relation with other entities; the queries and indexes are designed later. 
+With a relational database you normalize your schema, which eliminates redundant data and makes storage efficient. Then queries with joins bring the data back together again. 
+However joins cause bottlenecks on read, with data distributed across a cluster, this model does not scale horizontally. 
+With MapR Database, a table is automatically partitioned across a cluster by key range, and each server is the source for a subset of a table (called a tablet). 
+MapR Database has a “query-first” schema design, queries should be identified first, then the row key should be designed to distribute the data evenly and also to give a 
+meaningful primary index to query by. The row document (JSON) or columns (HBase) should be designed to group data together that will be read together. 
+With MapR Database you de-normalize your schema to store in one row or document what would be multiple tables with indexes in a relational world. 
+Grouping the data by key range provides for fast reads and writes by row key.
+
+Key Points --
+Normalization is targetted towards reducing redundant data storage to mazimize storage efficiency. Normalization as a technique dates back when storage was expensive. 
+Normalization leads to storage of data in multiple tables based on pre-defined schema. This lends to joins b/w tables as the technique to fetch data that makes sense only when 
+they are stictched across different tables and returned together. The data b/w tables are related through primary keys and foreign keys. The foreign key in a way defines the 
+association b/w ROW 1 of Table 1 to ROW 1 of Table 2.
+
+Denormalization is targetted towards avoiding expensive query processing by leveraging more storage which is much more cheaper today. Thus denormalization lends to storage of
+redundant data in the same logical structure, thereby avoiding joins (and any associated network transfer) to fetch related data. Since the related data are stored together, they
+can be returned without requiring any join like mechanism.
