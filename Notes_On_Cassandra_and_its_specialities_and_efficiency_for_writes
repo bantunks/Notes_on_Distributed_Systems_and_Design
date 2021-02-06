@@ -1,0 +1,29 @@
+Notes on Cassandra --
+Cassandra is CP system, and is optimized for write heavy workloads --> https://www.linkedin.com/pulse/why-cassandra-writes-faster-than-traditional-rdbms-vishal-kharjul
+Excerpt from the above link --
+
+"
+Consider an update statement, UPDATE Department SET DeptName = 'Sales' WHERE DEPTID = 100;
+If we execute above statement on Oracle, below will be rough sequence of events,
+A.     Server process will check if respective block is present in database buffer Cache
+B.     If block is not available in buffer Cache, server process will scan respective datafile and copy block to memory
+C.     Copied block will be modified in Memory
+D.     Respective redo and undo entries will be created
+E.      Once committed, database will write block again to respective datafile
+
+If you notice "B", you will find that Oracle just like MySQL has to read before write. Both B and E are significant contributor to the time taken for single write on Oracle.
+Now let’s see how sequence of events looks on Cassandra, UPDATE Department SET DeptName = 'Sales' WHERE DEPTID = 100;
+A.     Log redo entry in commit log (Cassandra’s own redo log)
+B.     Write update entry in memtable (memtable is table in database Buffer)
+C.     Flush data from the memtable
+D.     Storing data on disk in separate set of files called as SSTables
+
+Cassandra doesn’t care about existing value of column which is being modified, it skips read part completely and create a record in memory including column and updated value. It then groups inserts and updates in memory, and at intervals, sequentially writes the data to disk in append mode. With each flush, data is written in immutable files and is never overwritten. As a result, as it skips scanning of long data files and again adding data to same long datafiles, writes take significantly less time in Cassandra.
+
+What happens to read?
+Cassandra stores timestamp with every column value inserted, updated and deleted. To serve read request, Cassandra combines data from multiple datafiles and create a consistent image of data based on last write wins principal. As every read involves reading from multiple files, read performance can be slower if Cassandra is not maintained well.
+
+Conclusion: Cassandra’s Log-structured merge trees storage engine makes Cassandra suitable database for write heavy workload. There are also other factors which compliments it further like Cassandra’s Multi-master architecture and Partitioning of data across all nodes.  
+
+
+
