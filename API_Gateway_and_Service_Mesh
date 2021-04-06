@@ -1,0 +1,8 @@
+Very Good Introduction to API Gateway --
+https://nordicapis.com/what-is-an-api-gateway/
+
+Important Difference between API Gateways and Service Mesh --
+The main difference is that API gateways facilitate communication between clients and services, while service meshes facilitate communication between internal services only. There is overlap in how both patterns often contain routing, authentication, rate limiting, and metrics functionality, though. The service mesh is a newer pattern, and it might one day be sufficient on its own. For now, some practitioners combine the two approaches, using an API gateway to handle external traffic and a service mesh to handle the interaction between the individual microservices within the application.
+
+NEXT STEPS -- 
+Read about the design on ZUUL 2.0, Netflix's implementation of Asynchronous API Gateway
